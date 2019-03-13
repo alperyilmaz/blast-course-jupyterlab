@@ -1,0 +1,15 @@
+biopython
+numpy
+scipy
+networkx
+matplotlib
+notebook
+pytest
+bookbook
+nbval
+traitlets>=4.3.1
+ipython
+vdom
+jupyterlab_launcher>=0.5.0
+watermark
+reportlab
