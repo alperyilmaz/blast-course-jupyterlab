@@ -3,3 +3,4 @@ ncbi-blast+
 clustalo
 clustalw
 emboss
+ca-certificates
