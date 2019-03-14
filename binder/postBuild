@@ -1,5 +1,7 @@
 #!/bin/bash
 
+jupyter labextension install @jupyterlab/toc
+
 mkdir blastdb
 export BLASTDB=$HOME/blastdb
 cd blastdb
