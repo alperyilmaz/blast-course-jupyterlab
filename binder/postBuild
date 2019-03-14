@@ -9,9 +9,9 @@ cd blastdb
 
 # due to ftp access errors during binder build, I had to mirror db files at S3
 # thus S3 contents should be updated from time to time..
-wget https://s3-us-west-2.amazonaws.com/veri-analizi/16SMicrobial.tar.gz  
-wget https://s3-us-west-2.amazonaws.com/veri-analizi/swissprot.tar.gz
-wget https://s3-us-west-2.amazonaws.com/veri-analizi/taxdb.tar.gz 
+wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/16SMicrobial.tar.gz  
+wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/swissprot.tar.gz
+wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/taxdb.tar.gz 
 
 tar xzvf 16SMicrobial.tar.gz
 rm 16SMicrobial.tar.gz
@@ -20,12 +20,12 @@ rm swissprot.tar.gz
 tar xzvf taxdb.tar.gz
 rm taxdb.tar.gz
 cd 
-wget https://s3-us-west-2.amazonaws.com/veri-analizi/test.fa 
-wget https://s3-us-west-2.amazonaws.com/veri-analizi/garfield.fa 
-wget https://s3-us-west-2.amazonaws.com/veri-analizi/human_swissprot.fa
-wget https://s3-us-west-2.amazonaws.com/veri-analizi/ecoli_swissprot.fa
-wget https://s3-us-west-2.amazonaws.com/veri-analizi/Ecoli-cds.fa
-wget https://s3-us-west-2.amazonaws.com/veri-analizi/human_ensembl_transcripts.fa.gz
-wget https://s3-us-west-2.amazonaws.com/veri-analizi/human_ensembl_proteins.fa.gz
-wget https://s3-us-west-2.amazonaws.com/veri-analizi/all_human_viruses.fa
-wget https://s3-us-west-2.amazonaws.com/veri-analizi/human_ensembl_transcripts_50.fa
+wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/test.fa 
+wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/garfield.fa 
+wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/human_swissprot.fa
+wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/ecoli_swissprot.fa
+wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/Ecoli-cds.fa
+wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/human_ensembl_transcripts.fa.gz
+wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/human_ensembl_proteins.fa.gz
+wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/all_human_viruses.fa
+wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/human_ensembl_transcripts_50.fa
