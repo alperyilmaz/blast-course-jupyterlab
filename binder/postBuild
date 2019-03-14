@@ -3,7 +3,8 @@
 jupyter labextension install @jupyterlab/toc
 
 mkdir blastdb
-export BLASTDB=$HOME/blastdb
+export BLASTDB=/home/jovyan/blastdb/
+
 cd blastdb
 # wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/16SMicrobial.tar.gz 
 # wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/swissprot.tar.gz
