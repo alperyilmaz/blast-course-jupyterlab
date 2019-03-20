@@ -9,7 +9,7 @@ last-update: April 2nd, 2018
 
 by *alper yilmaz* for *GTU Bioinformatics Program Course*
 
-*2019-03-14* (PDF version of this document is accessible at `goo.gl/bhrkqQ` and html version is available at `https://goo.gl/siUoax`)
+*2019-03-14* (PDF version of this document is accessible at `goo.gl/bhrkqQ`)
 
 <!-- long url is https://s3-us-west-2.amazonaws.com/veri-analizi/BLAST-outline.pdf -->
 
@@ -21,7 +21,8 @@ by *alper yilmaz* for *GTU Bioinformatics Program Course*
 
 **Instructions:** 
 
-* If you are viewing  this document in JupyterLab environment, you can edit and run commands in cells. You can use `Ctrl+Enter` keyboard shortcut to run a cell. Normally the code is run in Python kernel but if the code has preceding `!` then it's run in terminal. Also, JupyterLab environment provides actual terminal access. Under `File` menu go to `New` option and choose `Terminal`. 
+* If you are viewing  this document in JupyterLab environment, you can edit and run commands in cells. You can use `Ctrl+Enter` keyboard shortcut to run a cell. Normally the code is run in Python kernel but if the code has preceding `!` then it's run in terminal. Same effect is achieved by adding `%%bash` on top of the cell.
+  * Also, JupyterLab environment provides actual terminal access. Under `File` menu go to `New` option and choose `Terminal`. 
 
 - To exercise terminal commands, please register an account at [Docker Cloud](https://cloud.docker.com/) and log in to [Play With Docker](https://labs.play-with-docker.com/) site with your Docker ID. Then, click `Add New Instance` and type the following command in terminal window `docker run -it alperyilmaz/blast-course`
 - Alternative access: Windows users should download and use Putty software to connect remote server in order to run the commands. The IP address is **will be provided during or right after class** and you should have your usernames provided. Linux users or Windows users with cygwin installed in their system should use `ssh` for connection.
@@ -70,19 +71,21 @@ The concept of commandline and Linux operating system itself might be a new conc
 
 ### How to run BLAST in commandline
 
+No need to run these commands, they are just for demonstration purposes.
+
 - a short example
 
-  ```
+  ```raw
   $ blastn -db Ecoli_cds -query test.fa
   ```
 
 - an advanced example (looping through all output options - **no single click involved**)
 
-  ```
+  ```raw
   $ for i in {0..12}; do blastn -db customdb -query test.fa -outfmt $i -out custom-format"$i".out; done
   ```
 
-
+No need to run those commands for now.
 
 ## BLAST index sources
 
@@ -102,7 +105,7 @@ The concept of commandline and Linux operating system itself might be a new conc
 
 The BLAST software has overwhelming number of arguments (shown below)
 
-```
+```raw
 $ blastn -h
 USAGE
   blastn [-h] [-help] [-import_search_strategy filename]
@@ -161,6 +164,12 @@ Required arguments are:
 Let's run the command from Jupyter. Select the cell below and then just click Run button or press `Ctrl+Enter` keys 
 
 ```bash
+blastn -h
+```
+
+OR
+
+```python
 ! blastn -h
 ```
 
@@ -186,7 +195,7 @@ If you're interested in more depth of alignment algorithms used by BLAST, please
 
 The commandline argument `-task` is used for defining the search strategy which are predefined sets of arguments.
 
-```
+```raw
  -task <String, Permissible values: 'blastn' 'blastn-short' 'dc-megablast' 'megablast' 'rmblastn' >
    Task to execute
    Default = `megablast'
@@ -221,49 +230,37 @@ By using `-export_search_strategy` option you can save the search strategy and b
 
 ## Generating BLAST index
 
-NCBI Blast toolkit comes with necessary executable to generate BLAST index.
+NCBI Blast toolkit comes with necessary executable to generate BLAST index. Let's see contents of the working directory before we generate the index.
 
-```
-$ makeblastdb -in Ecoli-cds.fa -dbtype nucl -title Ecoli_cds -out Ecoli_cds
-```
-
-If you are interested in contents of the file, you can easily see the contents oft the file irrespective of its size (Linux rocks ;). The `cat` command can print contents of a file on screen. If the file contents is large then you can kill the process by pressing `Control+c` . 
-
-```
-$ cat Ecoli-cds.fa
+```bash
+ls
 ```
 
-Let's see some more commandline tricks. What is the fastest way to know how many genes are there in the fasta file? Let's count number of lines that contain `>` characters in the file:
+Let's generate index for `Ecoli-cds.fa` file.
 
+```bash
+makeblastdb -in Ecoli-cds.fa -dbtype nucl -title Ecoli_cds -out Ecoli_cds
 ```
-$ grep ">" Ecoli-cds.fa | wc -l
-4097
+
+If you are interested in contents of the file, you can easily see the contents oft the file irrespective of its size (Linux rocks ;). The `cat` command can print contents of a file on screen. If the file contents is large then you can kill the process by pressing `Control+c` .  Since the fasta file is long, let's use another function to glimpse at file contents. `head` prints first 10 lines of the file and `tail` prints last 10 lines of the file.
+
+```bash
+head Ecoli-cds.fa
+```
+
+Let's see some more commandline tricks. What is the fastest way to know how many genes are there in the fasta file? Let's count number of lines that contain `>` characters in the file. To achieve this we'll use `grep` command which prints the line containing a specific pattern. Let's ask `grep` to print lines which contain `>` character.
+
+```bash
+grep ">" Ecoli-cds.fa | head
+```
+
+Now, let's use the terminal pipe, `|` to direct output of `grep` to another command which can count number of lines. The command is called `wc` and when used with `-l` argument it counts number of lines.
+
+```bash
+grep ">" Ecoli-cds.fa | wc -l
 ```
 
 `grep` command prints lines that contain a certain character or pattern and sends its output to another command which counts number of lines. The pipe character `|` (you can print this character by pressing `AltGr+<` keys) is used to pipe data between different commands. It looks like the fasta file contains 4097 sequences.
-
-### Commandline tricks with BLAST indexes (optional)
-
-Print directory names that are searched for database indexes:
-```
-$ blastdbcmd -show_blastdb_search_path
-```
-
-List database indexes for a given directory:
-```
-$ blastdbcmd -list $HOME/blastdb
-```
-
-Print information for all sequences in the index with given format (id and taxon id, in the example below):
-```
-$ blastdbcmd -db 16SMicrobial -entry all -outfmt "%g %T"
-```
-
-Collect sequence id that belongs to *E.coli* (taxon id=562) then pipe those sequence ids back into `blastdbcmd` to retrieve their sequences:
-```
-$ blastdbcmd -db 16SMicrobial -entry all -outfmt "%g %T" | awk '$2 == 562 \
-{print $1}' | blastdbcmd -db 16SMicrobial -entry_batch - -out ecoli-16s.fa
-```
 
 ## Running BLAST
 
@@ -271,16 +268,17 @@ $ blastdbcmd -db 16SMicrobial -entry all -outfmt "%g %T" | awk '$2 == 562 \
 
 ### Local run with local index
 
+```bash
+blastn -query test.fa -db Ecoli_cds
 ```
-$ blastn -query test.fa -db Ecoli_cds
-```
-
 
 ### Local run with remote index
 
-```
-$ blastn -remote -db nr -query test.fa -entrez_query "E.coli[Organism]" \
--evalue 1e-20 -num_alignments 10
+In order have shorter output, we are requesting 10 descriptions and 5 alignments only.
+
+```bash
+blastn -remote -db nr -query test.fa -entrez_query "E.coli[Organism]" \
+-evalue 1e-20 -num_descriptions 10 -num_alignments 5
 ```
 
 ## BLAST Output
@@ -289,7 +287,7 @@ Please go over [BLAST Results manual](ftp://ftp.ncbi.nlm.nih.gov/pub/factsheets/
 
 There are numerous formats generated by BLAST, they can be listed in detail upon `$ blastn -help` command:
 
-```
+```raw
  -outfmt <String>
    alignment view options:
      0 = pairwise,
@@ -307,26 +305,71 @@ There are numerous formats generated by BLAST, they can be listed in detail upon
     12 = JSON Seqalign output
 ```
 
+As you can see, options 6 and 7 are tabular format. Let's examine format 6:
+
+```bash
+blastn -query test.fa -db 16SMicrobial -max_target_seqs 1 -outfmt 6
+```
+
+If you also examine format 7, it's tabular and it contains column names (in commented lines)
+
+```bash
+blastn -query test.fa -db 16SMicrobial -max_target_seqs 1 -outfmt 7
+```
+
 Options 6, 7 and 10 can be additionally configured to produce  a custom format specified by space delimited format specifiers. Please check the help output for details. For instance, the command below generates a tabular output in which taxon id or kingdom names are printed in addition to standard alignment information.
 
-```
-$ blastn -query test.fa -db 16SMicrobial -max_target_seqs 1 -outfmt '6 \
+```bash
+blastn -query test.fa -db 16SMicrobial -max_target_seqs 1 -outfmt '6 \
 qseqid sseqid evalue bitscore sgi sacc staxids sscinames scomnames \
 sskingdoms stitle'
 ```
 
 The output can be saved to a named file via `-out` argument or it can be directed to a file or piped to another command for filtering, sorting operations:
 
+```bash
+blastn -db Ecoli_cds -query test.fa -out results.out
 ```
-$ blastn -db Ecoli_cds -query test.fa -out results.out
+
+OR 
+
+```bash
+blastn -db Ecoli_cds -query test.fa > results.out
+```
+
 OR
-$ blastn -db Ecoli_cds -query test.fa > results.out
-OR
-$ blastn -query Ecoli-cds.fa -db Ecoli_cds -outfmt 6 -evalue 0.001 -task \
+
+```bash
+blastn -query Ecoli-cds.fa -db Ecoli_cds -outfmt 6 -evalue 0.001 -task \
 blastn | awk '$1 != $2 && $3 > 95' | sort -k3nr
 ```
 
 The text output is more plain than web output (local blast software can generate a local html output if desired). But the simplicity of plain text brings the power of filtering, sorting the results easily.
+
+For instance, let's count number of results by `wc` command
+
+```bash
+blastn -query Ecoli-cds.fa -db Ecoli_cds -outfmt 6 -evalue 0.001 -task blastn | wc -l
+```
+
+
+
+By the help of `awk` command, we can filter lines. In this example we are doing BLAST of *E.coli* proteins to themselves in search of paralogs. First thing to do is remove lines where subject and query are same proteins. Since subject and query information is on columns 1 and 2, we can ask `awk` to show show lines where content of column 1 (*i.e.* `$1`) is not equal (*i.e.* `!=`) to content of second column (*i.e.* `$2`)
+
+```bash
+blastn -query Ecoli-cds.fa -db Ecoli_cds -outfmt 6 -evalue 0.001 -task \
+blastn | awk '$1 != $2' | head
+```
+
+
+
+The 3rd column is percent alignment and we can observe there are near perfect matches (%100) and matches with low similarity (~ %70). Let's use `awk` again to filter high percentage alignments. In `awk`, multiple conditions can be used in AND or OR fashion. For AND fashion we can use `&&` . Below we are asking `awk` to filter lines where first column content is not equal to second column content AND third column value greater than 95.
+
+```bash
+blastn -query Ecoli-cds.fa -db Ecoli_cds -outfmt 6 -evalue 0.001 -task \
+blastn | awk '$1 != $2 && $3 > 95' | head
+```
+
 
 
 
@@ -375,31 +418,71 @@ combine multiple criteria with `&&` – here’s how we display just the hits wi
 awk '6 < 4 && 5 < 599'
 ```
 
+### Commandline tricks with BLAST indexes (optional)
 
+Let's define an environment variable to tell where we keep database files
 
+```python
+%env BLASTDB=/home/jovyan/blastdb
+```
 
+Print directory names that are searched for database indexes:
+
+```bash
+blastdbcmd -show_blastdb_search_path
+```
+
+List database indexes for a given directory:
+```bash
+blastdbcmd -list $HOME/blastdb
+```
+
+Print information for all sequences in the index with given format (id and taxon id, in the example below):
+```bash
+blastdbcmd -db 16SMicrobial -entry all -outfmt "%g %T" | head
+```
+
+Collect sequence id that belongs to *E.coli* (taxon id=562) then pipe those sequence ids back into `blastdbcmd` to retrieve their sequences:
+```bash
+blastdbcmd -db 16SMicrobial -entry all -outfmt "%g %T" | awk '$2 == 562 \
+{print $1}' | blastdbcmd -db 16SMicrobial -entry_batch - -out ecoli-16s.fa
+```
+
+Let's check the contents of the file
+
+```bash
+head ecoli-16s.fa
+```
 
 ## Parsing BLAST output with BioPython
 
 BLAST results in XML format can be parsed with BioPython. In that case, you have programmatic access to BLAST result contents. In order to have XML formatted output, you need to use `-outfmt 5` argument.
 
+Let's generate BLAST output in XML format:
+
+```bash
+blastn -query test.fa -db Ecoli_cds -outfmt 5 -evalue 0.000001 -out blast_result.xml
+```
+
+
+
 ```python
 from Bio.Blast import NCBIXML
 result_handle = open("blast_result.xml")
-blast_record = NCBIXML.read(result_handle)
+blast_records = NCBIXML.parse(result_handle)
 
 E_VALUE_THRESH = 0.04
-
-for alignment in blast_record.alignments:
-    for hsp in alignment.hsps:
-        if hsp.expect < E_VALUE_THRESH:
-            print("****Alignment****")
-            print("sequence:", alignment.title)
-            print("length:", alignment.length)
-            print("e value:", hsp.expect)
-            print(hsp.query[0:75] + "...")
-            print(hsp.match[0:75] + "...")
-            print(hsp.sbjct[0:75] + "...")
+for blast_record in blast_records:
+    for alignment in blast_record.alignments:
+        for hsp in alignment.hsps:
+            if hsp.expect < E_VALUE_THRESH:
+                print("****Alignment****")
+                print("sequence:", alignment.title)
+                print("length:", alignment.length)
+                print("e value:", hsp.expect)
+                print(hsp.query[0:75] + "...")
+                print(hsp.match[0:75] + "...")
+                print(hsp.sbjct[0:75] + "...")
 ```
 
 
@@ -412,7 +495,7 @@ Let's get familiar with online version of Clustal
 
 Please use [online Clustal service](http://www.ebi.ac.uk/Tools/msa/clustalo/) to align the sequences below:
 
-```
+```raw
 >Sequence1 
 GARFIELDTHELASTFATCAT 
 >Sequence2 
@@ -445,7 +528,7 @@ Use the "garfield" sequences to perform MSA in terminal.
 
 There are numerous output formats available:
 
-```
+```raw
 --outfmt={a2m=fa[sta],clu[stal],msf,phy[lip],selex,st[ockholm],vie[nna]} MSA output file format (default: fasta)
 ```
 
@@ -466,6 +549,12 @@ GARFIELDTHEVERYFASTCAT
 --------THEFAT-----CAT
 ```
 
+```bash
+clustalo --infile garfield.fa 
+```
+
+
+
 The default output format is fasta formatted multiple sequence alignment. Let's check out `clustal` output
 
 ```txt
@@ -481,6 +570,12 @@ Sequence4      --------THEFAT-----CAT
                        ***.
 ```
 
+```bash
+clustalo --infile garfield.fa  --outfmt clustal
+```
+
+
+
 Let's match the commandline arguments with submission details of online version of ClustalO. 
 
 ```txt
@@ -495,6 +590,12 @@ Sequence1      GARFIELDTHELASTFAT-CAT	21
 Sequence2      GARFIELDTHEFASTCAT----	18
                        ***.   
 ```
+
+```bash
+clustalo --infile garfield.fa --threads 8 --MAC-RAM 8000  --outfmt clustal --resno  --output-order tree-order --seqtype protein
+```
+
+
 
 The output matches exactly the output from online version.
 

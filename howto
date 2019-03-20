@@ -1,0 +1,4 @@
+# convert markdown to ipynb
+notedown 02-BLAST-commandline.md >| 02-BLAST-commandline.ipynb
+
+# then use editor to remove yaml header in ipynb
