@@ -34,3 +34,13 @@ wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/human_ensembl_transcript
 # needed to use indexes downloaded from NCBI
 # this didn't work: export BLASTDB=/home/jovyan/blastdb/
 echo 'export BLASTDB="$HOME/blastdb/"' >> ~/.bashrc
+
+# trying really hard about environment variable problem
+echo 'export BLASTDB="$HOME/blastdb/"' >> ~/.bash_profile
+echo 'export BLASTDB=/home/jovyan/blastdb/' >> ~/.bash_profile
+
+
+echo 'export BLASTDB="$HOME/blastdb/"' >> ~/.profile
+echo 'export BLASTDB=/home/jovyan/blastdb/' >> ~/.profile
+
+

@@ -1,0 +1,4 @@
+; Start the section for BLAST configuration
+[BLAST]
+; Specifies the path where BLAST databases are installed
+BLASTDB=/home/jovyan/blastdb
