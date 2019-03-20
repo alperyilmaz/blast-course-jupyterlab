@@ -3,8 +3,6 @@
 jupyter labextension install @jupyterlab/toc
 
 mkdir blastdb
-export BLASTDB=/home/jovyan/blastdb/
-
 cd blastdb
 # wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/16SMicrobial.tar.gz 
 # wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/swissprot.tar.gz
@@ -32,3 +30,7 @@ wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/human_ensembl_transcript
 wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/human_ensembl_proteins.fa.gz
 wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/all_human_viruses.fa
 wget -q https://s3-us-west-2.amazonaws.com/veri-analizi/human_ensembl_transcripts_50.fa
+
+# needed to use indexes downloaded from NCBI
+# this didn't work: export BLASTDB=/home/jovyan/blastdb/
+echo 'export BLASTDB="$HOME/blastdb/"' >> ~/.bashrc
